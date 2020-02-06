@@ -1,7 +1,9 @@
 package com.example.streamdemo;
 
+import com.example.streamdemo.model.SimplePojo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,16 +28,6 @@ public class StreamDemoApplication {
 		SpringApplication.run(StreamDemoApplication.class, args);
 	}
 
-//	@Bean
-//	public Supplier<String> generate() {
-//		return () -> "sample" + Math.random();
-//	}
-//
-//	@Bean
-//	public Function<String, String> process() {
-//		return String::toUpperCase;
-//	}
-
 	EmitterProcessor<String> processor = EmitterProcessor.create();
 
 	@RequestMapping
@@ -51,12 +43,23 @@ public class StreamDemoApplication {
 	}
 
 	@Bean
+	public Supplier<SimplePojo> generate1() {
+		return () -> new SimplePojo(new ObjectId("5d57ea04a925495093b62549"));
+	}
+
+	@Bean
 	public Function<Flux<String>, Flux<String>> process() {
-		return flux -> flux.map(val -> val.toUpperCase());
+		return flux -> flux.map(String::toUpperCase);
 	}
 
 	@Bean
 	public Consumer<String> consume() {
 		return payload -> logger.info("Data received: " + payload);
 	}
+
+	@Bean
+	public Consumer<SimplePojo> consume1() {
+		return payload -> logger.info("Data received: " + payload.toString());
+	}
+
 }

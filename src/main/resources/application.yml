@@ -2,7 +2,7 @@ spring:
   cloud:
     stream:
       function:
-        definition: generate;process;consume
+        definition: generate;process;consume;generate1;consume1
       bindings:
         generate-out-0:
           destination: destination1
@@ -16,6 +16,12 @@ spring:
         consume-in-0:
           destination: destination2
           group: g2
+        generate1-out-0:
+          destination: destination3
+          group: g3
+        consume1-in-0:
+          destination: destination3
+          group: g3
         bindingServiceProperties:
           defaultBinder: local_rabbit
       binders:
